@@ -2,6 +2,7 @@ import re
 from flask import Blueprint, render_template, request
 import matplotlib.pyplot as plt
 import os
+from wordcloud import WordCloud, STOPWORDS
 
 import tweepy
 import csv
@@ -58,8 +59,9 @@ class SentimentAnalysis:
         negative = 0
         wnegative = 0
         snegative = 0
-        neutral = 0
- 
+        neutral = 0      
+
+        list_tweets=[]
         # iterating through tweets fetched
         for tweet in self.tweets:
            
@@ -68,6 +70,7 @@ class SentimentAnalysis:
              
             # print (tweet.text.translate(non_bmp_map))    #print tweet's text
             analysis = TextBlob(tweet.text)
+            list_tweets.append(analysis)
              
             # print(analysis.sentiment)  # print tweet's polarity
             # adding up polarities to find the average later
@@ -90,7 +93,7 @@ class SentimentAnalysis:
                 snegative += 1
  
         # Write to csv and close csv file
-        csvWriter.writerow(self.tweetText)
+        csvWriter.writerow(list_tweets)
         csvFile.close()
  
         # finding average of how people are reacting
@@ -127,7 +130,11 @@ class SentimentAnalysis:
             htmlpolarity = "Negative"
         elif (polarity > -1 and polarity <= -0.6):
             htmlpolarity = "strongly Negative"
- 
+        
+        file = open('result.csv')
+        csvreader = csv.reader(file)
+        self.createWordCloud(csvreader)
+
         self.plotPieChart(positive, wpositive, spositive, negative,
                           wnegative, snegative, neutral, keyword, tweets)
         print(polarity, htmlpolarity)
@@ -161,10 +168,26 @@ class SentimentAnalysis:
         plt.legend(patches, labels, loc="best")
         plt.axis('equal')
         plt.tight_layout()
-        strFile = r"images/plot1.png"
+        strFile = r"static/plot1.png"
         if os.path.isfile(strFile):
             os.remove(strFile)  # Opt.: os.system("rm "+strFile)
         plt.savefig(strFile)
+
+    def createWordCloud(self, csvs):
+
+        rows =' '
+        for row in csvs:
+            rows += ' '+ str(row)
+
+        self.STOPWORDS = ["https", "co", "RT", ] + list(STOPWORDS)
+
+        wordcloud = WordCloud(width= 800, height = 600, random_state=1, background_color='salmon', colormap='Pastel1', collocations=False, stopwords = STOPWORDS).generate(rows)
+        wordcloud.to_file('cloud.png')
+
+        plt.figure(figsize = (8, 8), facecolor = None)
+        plt.imshow(wordcloud)
+        plt.axis("off")
+        plt.tight_layout(pad = 0)
         plt.show()
  
  

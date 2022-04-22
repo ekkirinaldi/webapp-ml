@@ -24,6 +24,11 @@ try:
 except:
     print("An exception occured")
 
+@app.errorhandler(404)
+def page_not_found(e):
+    # note that we set the 404 status explicitly
+    return render_template('404.html'), 404
+
 @app.route('/')
 def login():
     return render_template('login.html')
@@ -60,8 +65,6 @@ def add_user():
     name = request.form.get('uname')
     email = request.form.get('uemail')
     password = request.form.get('upassword')
-    #cursor.execute("""INSERT INTO 'users' ('name','email','password') VALUES ('{}','{}','{}')""".format(
-        #name, email, password))
     cursor.execute('INSERT INTO users (name, email, password)'
             'VALUES (%s, %s, %s)',
             (name, email, password,))
