@@ -15,7 +15,7 @@ nltk==3.7
 numpy==1.22.3
 oauthlib==3.2.0
 packaging==21.3
-Pillow==9.1.0
+Pillow==10.0.1
 psycopg2 @ file:///Users/runner/miniforge3/conda-bld/psycopg2-split_1640944572059/work
 pyparsing==3.0.8
 python-dateutil==2.8.2
