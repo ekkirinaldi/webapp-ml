@@ -13,7 +13,7 @@ MarkupSafe==2.1.1
 matplotlib==3.5.1
 nltk==3.7
 numpy==1.22.3
-oauthlib==3.2.0
+oauthlib==3.2.2
 packaging==21.3
 Pillow==10.0.1
 psycopg2 @ file:///Users/runner/miniforge3/conda-bld/psycopg2-split_1640944572059/work
